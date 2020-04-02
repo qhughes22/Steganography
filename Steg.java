@@ -1,8 +1,7 @@
 
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.io.File;
-import java.lang.reflect.Array;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.imageio.ImageIO;
@@ -10,15 +9,31 @@ import javax.imageio.ImageIO;
 public class Steg {
     public static void main(String[] args) throws Exception {
 
-        System.out.println(binaryToString(getLeastSigBits("hide_text.png")));
-        System.out.println("");
+        //System.out.println(binaryToString(getLeastSigBits("hide_text.png")));
+    doAll(args[0]);
+     }
+
+    public static void doAll(String d) throws Exception{ //change the contents of the first arg to write to change what you want to do
+        File dir = new File(d);
+        for(File f: dir.listFiles())
+            write(binaryToString(getLeastSigBits(f.getName())), "testdest2/"+(f.getName()).substring(0,f.getName().length()-3)+".txt");
     }
+
+    public static void write(String s, String destination)throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(destination));
+        writer.write(s);
+        writer.close();
+    }
+
+
+
+
 
     public static int[] getLeastSigBits(String filename) throws Exception { //gets least significant bits
         BufferedImage image = ImageIO.read(new File(filename));
         int width = image.getWidth();
         int height = image.getHeight();
-        System.out.println("Height: " + height + " Width: " + width);
+        System.out.println("Height of " + filename + ": " + height + " Width: " + width);
         WritableRaster raster = image.getRaster();
         int count = 0;
         ArrayList<Integer> all = new ArrayList<>();
