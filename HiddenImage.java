@@ -4,6 +4,8 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import java.util.ArrayList;
 
+//takes in the magnified image (as though it was passed through MagnifyBits) and uncovers the hidden image
+
 public class HiddenImage {
 	public static void main (String[] args) throws Exception{
 		if (args[0] == null) {
