@@ -9,8 +9,8 @@ import javax.imageio.ImageIO;
 public class Steg {
     public static void main(String[] args) throws Exception {
 
-        //System.out.println(binaryToString(getLeastSigBits("hide_text.png")));
-    doAll(args[0]);
+        System.out.println(binaryToString(getLeastSigBits("hide_text.png")));
+    //doAll(args[0]);
      }
 
     public static void doAll(String d) throws Exception{ //change the contents of the first arg to write to change what you want to do
@@ -68,6 +68,34 @@ public class Steg {
                     all.add((pixels[0] & 2)>>1);
                     all.add((pixels[1] & 2)>>1);
                     all.add((pixels[2] & 2)>>1);
+                    count++;
+                }
+            }
+        }
+        int[] a = new int[all.size()];
+        for (int i = 0; i < all.size(); i++)
+            a[i] = all.get(i);
+        return a;
+    }
+
+    public static int[] getLeastSecondLeastSigBits(String filename) throws Exception { //gets least significant bits
+        BufferedImage image = ImageIO.read(new File(filename));
+        int width = image.getWidth();
+        int height = image.getHeight();
+        System.out.println("Height: " + height + " Width: " + width);
+        WritableRaster raster = image.getRaster();
+        int count = 0;
+        ArrayList<Integer> all = new ArrayList<>();
+        for (int r = 0; r < height; r++) {
+            for (int c = 0; c < width; c++) {
+                int[] pixels = raster.getPixel(c, r, (int[]) null);
+                if (true) {
+                    all.add((pixels[0] & 2)>>1);
+                    all.add(pixels[0] & 1);
+                    all.add((pixels[1] & 2)>>1);
+                    all.add(pixels[1] & 1);
+                    all.add((pixels[2] & 2)>>1);
+                    all.add(pixels[2] & 1);
                     count++;
                 }
             }
