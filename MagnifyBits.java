@@ -33,6 +33,29 @@ public class MagnifyBits {
         return image;
 	}
 	
+	public static void generateMagnifiedImage(int[] bitstring, BufferedImage image) throws Exception{
+		// takes an image and an array of its LSB's and generates an image with those bits magnified
+		// can be called from other classes
+		
+		int width = image.getWidth();
+		int height = image.getHeight();
+		WritableRaster raster = image.getRaster();
+		int[] magnifiedBits = magnifyBitsInArray(bitstring);
+		
+		int count = 0;
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				int[] pixels = raster.getPixel(x, y, (int[]) null);
+				for (int i=0; i < 3; i++) {
+					pixels[i] = magnifiedBits[count];
+					count++;
+				}
+				raster.setPixel(x, y, pixels);
+			}
+		}
+		ImageIO.write(image, "png", new File("altered_java.png"));
+	}
+	
 	public static int[] magnifyBitsInArray(int[] bitstring) {
 		// takes in an int[] passed through a method such as Steg.getLeastSignificantBit and magnifies each bit
 		// can be called from other classes
