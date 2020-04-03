@@ -4,8 +4,6 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import java.util.ArrayList;
 
-//takes in the magnified image (as though it was passed through MagnifyBits) and uncovers the hidden image
-
 public class HiddenImage {
 	public static void main (String[] args) throws Exception{
 		if (args[0] == null) {
@@ -16,7 +14,45 @@ public class HiddenImage {
 			ImageIO.write(img, "png", new File("uncovered_java.png"));
 	}
 
+	public static BufferedImage uncover(int[] bitstring) {
+		// takes in an array of magnified bits and generates the hidden image
+		// can be called from other classes
+		
+		ArrayList<Integer> pixelString = getPixelString(bitstring);
+		int newWidth = getWidth(pixelString);
+		System.out.println(newWidth);
+		int newHeight = getHeight(pixelString);
+		System.out.println(newHeight);
+		int[][][] newMap = new int[newHeight][newWidth][3];
+		System.out.println(newMap.length + " " + newMap[0].length + " " + newMap[0][0].length);
+		
+		BufferedImage newImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+		WritableRaster ras2 = newImage.getRaster();
+		
+		int count = 64;
+		for (int y=0; y<newHeight; y++) {
+			for (int x=0; x<newWidth; x++) {
+				System.out.println(x + " " + y);
+				for (int z=0; z<3; z++) {
+					newMap[y][x][z] = getChannel(pixelString, count);
+					count+=8;
+				}
+				ras2.setPixel(x, y, newMap[y][x]);
+			}
+		}
+		return newImage;
+	}
+	
+	private static ArrayList<Integer> getPixelString(int[] bitstring) {
+		ArrayList<Integer> pixelString = new ArrayList<Integer>(2);
+		for (int i=0; i<bitstring.length; i++) pixelString.add(bitstring[i]);
+		return pixelString;
+	}
+
 	private static BufferedImage uncover(BufferedImage image) {
+		// takes in an image passed through MagnifyBits.main (eg. altered_java.png) and generates the hidden image
+		// must be called from HiddenImage.main
+		
 		int width = image.getWidth();
         int height = image.getHeight();
 		WritableRaster raster = image.getRaster();
@@ -54,11 +90,6 @@ public class HiddenImage {
 		return newImage;
 	}
 
-	private static int getChannel(ArrayList<Integer> pixelString, int count) {
-		int[] channelBits = new int[8];
-		for (int i=0;i<channelBits.length;i++) channelBits[i] = pixelString.get(count+i);
-		return bits2int(channelBits);
-	}
 
 	private static ArrayList<Integer> getPixelString(int[][][] pixelMap) {
 		ArrayList<Integer> pixelString = new ArrayList<Integer>(2);
@@ -71,7 +102,13 @@ public class HiddenImage {
 		}
 		return pixelString;
 	}
-
+	
+	private static int getChannel(ArrayList<Integer> pixelString, int count) {
+		int[] channelBits = new int[8];
+		for (int i=0;i<channelBits.length;i++) channelBits[i] = pixelString.get(count+i);
+		return bits2int(channelBits);
+	}
+	
 	private static int getHeight(ArrayList<Integer> pixelString) {
 		int[] heightBits = new int[32];
 		for (int i=0; i<heightBits.length; i++) heightBits[i] = pixelString.get(i);
