@@ -5,26 +5,34 @@ import javax.imageio.ImageIO;
 import java.util.ArrayList;
 
 public class HiddenImage {
-	public static void main (String[] args) throws Exception{
-		if (args[0] == null) {
+	public static void main (String[] args){
+		if (args.length == 0) {
 			System.out.println("ERROR: No image passed!");
 			System.exit(0);
 		}
-			BufferedImage img = uncover(ImageIO.read(new File(args[0])));
-			ImageIO.write(img, "png", new File("uncovered_java.png"));
+		try {
+			File f = new File(args[0]);
+			BufferedImage img = uncover(ImageIO.read(f));	
+			ImageIO.write(img, "png", new File("uncovered_java/" + f.getName()));
+		}
+		catch (Exception e) {
+			System.out.println("No dice");
+			return;
+		}
 	}
 
-	public static BufferedImage uncover(int[] bitstring) {
+	public static BufferedImage uncover(int[] bitstring, int width, int height) {
 		// takes in an array of magnified bits and generates the hidden image
 		// can be called from other classes
 		
 		ArrayList<Integer> pixelString = getPixelString(bitstring);
-		int newWidth = getWidth(pixelString);
+		int newWidth = width/8;
 		System.out.println(newWidth);
-		int newHeight = getHeight(pixelString);
+		int newHeight = height/8;
 		System.out.println(newHeight);
-		int[][][] newMap = new int[newHeight][newWidth][3];
-		System.out.println(newMap.length + " " + newMap[0].length + " " + newMap[0][0].length);
+		int[][] redMap = new int[newHeight][newWidth];
+		int[][] greenMap = new int[newHeight][newWidth];
+		int[][] blueMap = new int[newHeight][newWidth];
 		
 		BufferedImage newImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
 		WritableRaster ras2 = newImage.getRaster();
@@ -32,12 +40,9 @@ public class HiddenImage {
 		int count = 64;
 		for (int y=0; y<newHeight; y++) {
 			for (int x=0; x<newWidth; x++) {
-				System.out.println(x + " " + y);
-				for (int z=0; z<3; z++) {
-					newMap[y][x][z] = getChannel(pixelString, count);
-					count+=8;
-				}
-				ras2.setPixel(x, y, newMap[y][x]);
+				setChannels(y, x, redMap, greenMap, blueMap, count, pixelString);
+				count+=24;
+				ras2.setPixel(x, y, new int[]{redMap[y][x],greenMap[y][x],blueMap[y][x]});
 			}
 		}
 		return newImage;
@@ -49,7 +54,7 @@ public class HiddenImage {
 		return pixelString;
 	}
 
-	private static BufferedImage uncover(BufferedImage image) {
+	private static BufferedImage uncover(BufferedImage image) throws Exception{
 		// takes in an image passed through MagnifyBits.main (eg. altered_java.png) and generates the hidden image
 		// must be called from HiddenImage.main
 		
@@ -70,8 +75,9 @@ public class HiddenImage {
 		System.out.println(newWidth);
 		int newHeight = getHeight(pixelString);
 		System.out.println(newHeight);
-		int[][][] newMap = new int[newHeight][newWidth][3];
-		System.out.println(newMap.length + " " + newMap[0].length + " " + newMap[0][0].length);
+		int[][] redMap = new int[newHeight][newWidth];
+		int[][] greenMap = new int[newHeight][newWidth];
+		int[][] blueMap = new int[newHeight][newWidth];
 		
 		BufferedImage newImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
 		WritableRaster ras2 = newImage.getRaster();
@@ -80,17 +86,23 @@ public class HiddenImage {
 		for (int y=0; y<newHeight; y++) {
 			for (int x=0; x<newWidth; x++) {
 				System.out.println(x + " " + y);
-				for (int z=0; z<3; z++) {
-					newMap[y][x][z] = getChannel(pixelString, count);
-					count+=8;
-				}
-				ras2.setPixel(x, y, newMap[y][x]);
+				setChannels(y, x, redMap, greenMap, blueMap, count, pixelString);
+				count+=24;
+				ras2.setPixel(x, y, new int[]{redMap[y][x],greenMap[y][x],blueMap[y][x]});
 			}
 		}
 		return newImage;
 	}
 
-
+	private static void setChannels(int i, int j, int[][] redMap, int[][] greenMap, int[][] blueMap, int count, ArrayList<Integer> pixelString) {
+		int c = count;
+		redMap[i][j] = getChannel(pixelString, c);
+		c+=8;
+		greenMap[i][j] = getChannel(pixelString, c);
+		c+=8;
+		blueMap[i][j] = getChannel(pixelString, c);
+	}
+	
 	private static ArrayList<Integer> getPixelString(int[][][] pixelMap) {
 		ArrayList<Integer> pixelString = new ArrayList<Integer>(2);
 		for (int x=0; x<pixelMap.length; x++) {
