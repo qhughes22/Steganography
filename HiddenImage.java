@@ -37,7 +37,7 @@ public class HiddenImage {
 		BufferedImage newImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
 		WritableRaster ras2 = newImage.getRaster();
 		
-		int count = 64;
+		int count = 0;
 		for (int y=0; y<newHeight; y++) {
 			for (int x=0; x<newWidth; x++) {
 				setChannels(y, x, redMap, greenMap, blueMap, count, pixelString);
@@ -82,7 +82,7 @@ public class HiddenImage {
 		BufferedImage newImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
 		WritableRaster ras2 = newImage.getRaster();
 		
-		int count = 64;
+		int count = 0;
 		for (int y=0; y<newHeight; y++) {
 			for (int x=0; x<newWidth; x++) {
 				System.out.println(x + " " + y);
