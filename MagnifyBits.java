@@ -13,7 +13,7 @@ public class MagnifyBits {
 		HiddenImage.main(args);
 	}
 
-	private static BufferedImage magnifyBitsInImage(BufferedImage image) {
+	private static BufferedImage magnifyBitsInImage(BufferedImage image, boolean least) {
 		// takes an image (such as hide_image.png or hide_text.png) and creates a new image with all pixel channels' LSB magnified
 		// must be called from MagnifyBits.main
 		
@@ -25,8 +25,32 @@ public class MagnifyBits {
             for (int y = 0; y < height; y++) {
             	int[] pixels = raster.getPixel(x, y, (int[]) null);
             	for (int i=0; i < pixels.length; i++) {
-            		pixels[i] = magnify(pixels[i]);
+            		if (least) pixels[i] = magnify(pixels[i]);
+            		else pixels[i] = magnify2(pixels[i]);
             	}
+            	raster.setPixel(x, y, pixels);
+            }
+        }
+        return image;
+	}
+	
+	private static BufferedImage magnifyBitsInImage(BufferedImage image, int channel, boolean least) {
+		// takes an image (such as hide_image.png or hide_text.png) and creates a new image with all pixel channels' LSB magnified
+		// must be called from MagnifyBits.main
+		
+		// channel: 0 = red, 1 = green, 2 = blue
+		// least: True = 1st LSB, False = 2nd LSB
+		
+		
+		int width = image.getWidth();
+        int height = image.getHeight();
+        WritableRaster raster = image.getRaster();
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+            	int[] pixels = raster.getPixel(x, y, (int[]) null);
+            	if (least) pixels[channel] = magnify(pixels[channel]);
+            	else pixels[channel] = magnify2(pixels[channel]);
             	raster.setPixel(x, y, pixels);
             }
         }
