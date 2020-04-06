@@ -11,7 +11,7 @@ public class Steg {
 
         //printArray(findHeader(getFirstAndSecondLeastSigBitsFast("Images/WinkyFace.png",a)));
 
-        checkEverythingSingleFile("Images/", "TripleThreat");
+        runOnAll("Images_pure");
     }
 
     public static void runOnAll(String d) throws Exception {
@@ -20,7 +20,7 @@ public class Steg {
 
         for (File f : dir.listFiles())
                // System.out.println(f.getName());
-            checkEverything("Images/", f.getName());
+            checkEverythingSingleFile("Images_pure/", f.getName());
     }
 
     public static void printArray(int[] a) {
@@ -42,10 +42,9 @@ public class Steg {
         return s;
     }
     public static void checkEverythingSingleFile(String dir, String filename) throws Exception {
-        BufferedWriter writer = new BufferedWriter(new FileWriter("outputs/"+filename+".txt"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("outputs/"+filename.substring(0, filename.length()-4)+".txt"));
 
-        File f = new File(dir + filename+".png");
-        filename+= ".png";
+        File f = new File(dir + filename);
         ArrayList<Integer> c = new ArrayList<>();
         c.add(0);
         writer.write("1r1000\n");
