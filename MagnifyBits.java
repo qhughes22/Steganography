@@ -95,5 +95,8 @@ public class MagnifyBits {
 		else return 0;
 		
 	}
-	
+	private static int magnify2(int p) {
+		if (((p & 2) >> 1) == 1) return 255;
+		else return 0;
+	}
 }
