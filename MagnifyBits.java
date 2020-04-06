@@ -121,8 +121,8 @@ public class MagnifyBits {
 	
 	public static int magnifyBoth(int p) {
 		int n = 0;
-		if (((p & 2) >> 1) == 1) n += (15 << 4);
-		if ((p & 1) == 1) n+= 15;
+		if (((p & 2) >> 1) == 1) n += ((10 << 4) + 10);
+		if ((p & 1) == 1) n += ((5 << 4) + 5);
 		return n;
 	}
 }
