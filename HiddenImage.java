@@ -26,9 +26,9 @@ public class HiddenImage {
 		// can be called from other classes
 		
 		ArrayList<Integer> pixelString = getPixelString(bitstring);
-		int newWidth = width/8;
+		int newWidth = getWidth(pixelString);
 		System.out.println(newWidth);
-		int newHeight = height/8;
+		int newHeight = getHeight(pixelString);
 		System.out.println(newHeight);
 		int[][] redMap = new int[newHeight][newWidth];
 		int[][] greenMap = new int[newHeight][newWidth];
