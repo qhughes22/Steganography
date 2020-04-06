@@ -14,18 +14,18 @@ public class Steg {
         a.add(0);
         a.add(1);
         a.add(2);
-        //printArray(getFirstAndSecondLeastSigBits("Images/WinkyFace.png",a));
+        printArray(findHeader(getFirstAndSecondLeastSigBits("Images/WinkyFace.png",a)));
         //doAll("Images/small_images");
         //doAll("Images/big_images");
-    checkEverything("Images/found_images/","NewWinkyFace.png");
+    //checkEverything("Images/found_images/","NewWinkyFace.png");
     }
 
     public static void printArray(int[] a){
         for(int i=0;i<1000;i++)
-            System.out.print(a[i]);
+            System.out.println(a[i]);
     }
 
-    public static int[] findHeader(int[] a){
+    public static int[] findHeader(int[] a){ 
         int[][] ints = getChunks(a,32);
         int[] s= new int[ints.length];
         for(int i=0;i<ints.length;i++)
@@ -34,6 +34,15 @@ public class Steg {
     }
 
     public static void checkEverything(String dir, String filename) throws Exception{
+        File file = new File(filename);
+        if (!file.exists()) {
+            if (file.mkdir()) {
+                System.out.println("Directory is created!");
+            } else {
+                System.out.println("Failed to create directory!");
+            }
+        } else System.out.println("Directory already exists");
+
         File f = new File(dir + filename);
         ArrayList<Integer> c = new ArrayList<>();
         c.add(0);
@@ -424,7 +433,7 @@ public class Steg {
         String s = "";
         for (int i = 0; i < a.length; i++)
             s += a[i];
-        return Integer.parseInt(s, 2);
+        return Integer.parseUnsignedInt(s, 2);
     }
 
     public static int[] listToArray(ArrayList<Integer> a) {
