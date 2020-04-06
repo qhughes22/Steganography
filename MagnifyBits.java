@@ -17,6 +17,8 @@ public class MagnifyBits {
 		// takes an image (such as hide_image.png or hide_text.png) and creates a new image with all pixel channels' LSB magnified
 		// must be called from MagnifyBits.main
 		
+		// least: True = 1st LSB, False = 2nd LSB
+		
 		int width = image.getWidth();
         int height = image.getHeight();
         WritableRaster raster = image.getRaster();
