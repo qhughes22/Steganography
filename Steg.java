@@ -17,7 +17,7 @@ public class Steg {
         //printArray(getFirstAndSecondLeastSigBits("Images/WinkyFace.png",a));
         //doAll("Images/small_images");
         //doAll("Images/big_images");
-    checkEverything("Images/found_images/NewWinkyFace.png");
+    checkEverything("Images/found_images/","NewWinkyFace.png");
     }
 
     public static void printArray(int[] a){
@@ -33,11 +33,47 @@ public class Steg {
         return s;
     }
 
-    public static void checkEverything(String filename) throws Exception{
-        File f = new File(filename);
+    public static void checkEverything(String dir, String filename) throws Exception{
+        File f = new File(dir + filename);
         ArrayList<Integer> c = new ArrayList<>();
-        write(binaryToString(getLeastSigBitsFast(filename)), /*filename +*/   "NewWinkyFace.png/" + (f.getName()).substring(0, f.getName().length() - 3) + "1rgb1000.txt");
         c.add(0);
+        write(binaryToString(getLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "1r1000.txt");
+        write(binaryToString(getSecondLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "2r1000.txt");
+        write(binaryToString(getFirstAndSecondLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "12r1000.txt");
+        c.remove(0);
+        c.add(1);
+        write(binaryToString(getLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "1g1000.txt");
+        write(binaryToString(getSecondLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "2g1000.txt");
+        write(binaryToString(getFirstAndSecondLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "12g1000.txt");
+        c.remove(0);
+        c.add(2);
+        write(binaryToString(getLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "1b1000.txt");
+        write(binaryToString(getSecondLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "2b1000.txt");
+        write(binaryToString(getFirstAndSecondLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "12b1000.txt");
+        c.remove(0);
+        c.add(0);
+        c.add(1);
+        write(binaryToString(getLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "1rg1000.txt");
+        write(binaryToString(getSecondLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "2rg1000.txt");
+        write(binaryToString(getFirstAndSecondLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "12rg1000.txt");
+        c.remove(0);
+        c.remove(0);
+        c.add(0);
+        c.add(2);
+        write(binaryToString(getLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "1rb1000.txt");
+        write(binaryToString(getSecondLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "2rb1000.txt");
+        write(binaryToString(getFirstAndSecondLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "12rb1000.txt");
+        c.remove(0);
+        c.remove(0);
+        c.add(1);
+        c.add(2);
+        write(binaryToString(getLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "1gb1000.txt");
+        write(binaryToString(getSecondLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "2gb1000.txt");
+        write(binaryToString(getFirstAndSecondLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "12gb1000.txt");
+        c.add(0);
+        write(binaryToString(getLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "1rgb1000.txt");
+        write(binaryToString(getSecondLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "2rgb1000.txt");
+        write(binaryToString(getFirstAndSecondLeastSigBitsFast(dir +filename,c)), filename +  "/" + (f.getName()).substring(0, f.getName().length() - 3) + "12rgb1000.txt");
 
 
     }
@@ -251,8 +287,7 @@ public class Steg {
             a[i] = all.get(i);
         return a;
     }
-
-    public static int[] getSecondLeastSigBits(String filename, ArrayList<Integer> p) throws Exception { //gets least significant bits
+    public static int[] getLeastSigBitsFast(String filename, ArrayList<Integer> p) throws Exception { //gets least significant bits
         boolean red = false;
         boolean green = false;
         boolean blue = false;
@@ -273,6 +308,72 @@ public class Steg {
             for (int c = 0; c < width; c++) {
                 int[] pixels = raster.getPixel(c, r, (int[]) null);
                 if (count<1000) {
+                    if (red) all.add(pixels[0] & 1);
+                    if (green) all.add(pixels[1] & 1);
+                    if (blue) all.add(pixels[2] & 1);
+                    count++;
+                }
+            }
+        }
+        int[] a = new int[all.size()];
+        for (int i = 0; i < all.size(); i++)
+            a[i] = all.get(i);
+        return a;
+    }
+    public static int[] getSecondLeastSigBitsFast(String filename, ArrayList<Integer> p) throws Exception { //gets least significant bits
+        boolean red = false;
+        boolean green = false;
+        boolean blue = false;
+        if (p.contains(0))
+            red = true;
+        if (p.contains(1))
+            green = true;
+        if (p.contains(2))
+            blue = true;
+        BufferedImage image = ImageIO.read(new File(filename));
+        int width = image.getWidth();
+        int height = image.getHeight();
+        System.out.println("Height of " + filename + ": " + height + " Width: " + width);
+        WritableRaster raster = image.getRaster();
+        int count = 0;
+        ArrayList<Integer> all = new ArrayList<>();
+        for (int r = 0; r < height; r++) {
+            for (int c = 0; c < width; c++) {
+                int[] pixels = raster.getPixel(c, r, (int[]) null);
+                if (count<1000) {
+                    if (red) all.add((pixels[0] & 2) >> 1);
+                    if (green) all.add((pixels[1] & 2) >> 1);
+                    if (blue) all.add((pixels[2] & 2) >> 1);
+                    count++;
+                }
+            }
+        }
+        int[] a = new int[all.size()];
+        for (int i = 0; i < all.size(); i++)
+            a[i] = all.get(i);
+        return a;
+    }
+    public static int[] getSecondLeastSigBits(String filename, ArrayList<Integer> p) throws Exception { //gets least significant bits
+        boolean red = false;
+        boolean green = false;
+        boolean blue = false;
+        if (p.contains(0))
+            red = true;
+        if (p.contains(1))
+            green = true;
+        if (p.contains(2))
+            blue = true;
+        BufferedImage image = ImageIO.read(new File(filename));
+        int width = image.getWidth();
+        int height = image.getHeight();
+        System.out.println("Height of " + filename + ": " + height + " Width: " + width);
+        WritableRaster raster = image.getRaster();
+        int count = 0;
+        ArrayList<Integer> all = new ArrayList<>();
+        for (int r = 0; r < height; r++) {
+            for (int c = 0; c < width; c++) {
+                int[] pixels = raster.getPixel(c, r, (int[]) null);
+                if (true) {
                     if (red) all.add((pixels[0] & 2) >> 1);
                     if (green) all.add((pixels[1] & 2) >> 1);
                     if (blue) all.add((pixels[2] & 2) >> 1);
