@@ -304,18 +304,20 @@ public class Steg {
         for (int r = 0; r < height; r++) {
             for (int c = 0; c < width; c++) {
                 int[] pixels = raster.getPixel(c, r, (int[]) null);
-                if (true) {
+                 if (true) {
                     if (red) {
-                        all.add(pixels[0] & 1);
                         all.add((pixels[0] & 2) >> 1);
+                        all.add(pixels[0] & 1);
                     }
+
                     if (green) {
-                        all.add(pixels[1] & 1);
                         all.add((pixels[1] & 2) >> 1);
+                    	all.add(pixels[1] & 1);
                     }
+
                     if (blue) {
-                        all.add(pixels[2] & 1);
                         all.add((pixels[2] & 2) >> 1);
+                        all.add(pixels[2] & 1);
                     }
                     count++;
                 }
@@ -349,16 +351,16 @@ public class Steg {
                 int[] pixels = raster.getPixel(c, r, (int[]) null);
                 if (count < 1000) {
                     if (red) {
-                        all.add(pixels[0] & 1);
                         all.add((pixels[0] & 2) >> 1);
+                        all.add(pixels[0] & 1);
                     }
                     if (green) {
-                        all.add(pixels[1] & 1);
                         all.add((pixels[1] & 2) >> 1);
+                    	all.add(pixels[1] & 1);
                     }
                     if (blue) {
-                        all.add(pixels[2] & 1);
                         all.add((pixels[2] & 2) >> 1);
+                        all.add(pixels[2] & 1);
                     }
                     count++;
                 }
