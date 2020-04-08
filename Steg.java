@@ -14,12 +14,12 @@ public class Steg {
         a.add(1);
         //(findHeader(getLeastSigBits("Images/WideDogIsWide.png", a)));
 
-        getAllText("Images/newest");
-        //getAllText("Images_pure");
+        getAllText("Images/found_images");
+        getAllText("Images_pure");
         //File dir = new File("testtt");
         // System.out.println(dir.getPath());
-        // magnifyEach("Images_pure");
-        magnifyEach("Images/newest");
+         //magnifyEach("Images_pure");
+       // magnifyEach("Images/found_images");
     }
 
     public static void magnifyEach(String d) throws Exception {
@@ -100,7 +100,7 @@ public class Steg {
     }
 
     public static void checkEverythingSingleFile(String dir, String filename) throws Exception {
-        BufferedWriter writer = new BufferedWriter(new FileWriter("outputs/LRTB/" + filename.substring(0, filename.length() - 4) + ".txt"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("outputsfiltered/LRTB/" + filename.substring(0, filename.length() - 4) + ".txt"));
         String f = dir + filename;
         ArrayList<Integer> c = new ArrayList<>();
         c.add(0);
@@ -169,7 +169,7 @@ public class Steg {
     }
 
     public static void checkEverythingSingleFileTBLR(String dir, String filename) throws Exception {
-        BufferedWriter writer = new BufferedWriter(new FileWriter("outputs/TBLR/" + filename.substring(0, filename.length() - 4) + ".txt"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("outputsfiltered/TBLR/" + filename.substring(0, filename.length() - 4) + ".txt"));
         String f = dir + filename;
         ArrayList<Integer> c = new ArrayList<>();
         c.add(0);
@@ -243,19 +243,19 @@ public class Steg {
         for (int i = 0; i < c.size(); i++)
             channels += colors[c.get(i)];
         writer.write("\n1" + channels + "1500\n");
-        writer.append(binaryToString(getLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.append(binaryToString(getLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 \n]", ""));
         writer.append("\n2" + channels + "1500\n");
-        writer.write(binaryToString(getSecondLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.write(binaryToString(getSecondLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 \n]", ""));
         writer.append("\n12" + channels + "1500\n");
-        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 \n]", ""));
         writer.append("\n12altt" + channels + "1500\n");
-        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFastAlt(filename, c, true)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFastAlt(filename, c, true)).replaceAll("[^a-zA-Z0-9 \n]", ""));
         writer.append("\n12altf" + channels + "1500\n");
-        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFastAlt(filename, c, false)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFastAlt(filename, c, false)).replaceAll("[^a-zA-Z0-9 \n]", ""));
         writer.append("\n123" + channels + "1500\n");
-        writer.write(binaryToString(getFirstSecondAndThirdLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.write(binaryToString(getFirstSecondAndThirdLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 \n]", ""));
         writer.append("\n3" + channels + "1500\n");
-        writer.write(binaryToString(getThirdLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.write(binaryToString(getThirdLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 \n]", ""));
     }
 
     public static void writeMeTBLR(BufferedWriter writer, ArrayList<Integer> c, String filename) throws Exception {
@@ -264,19 +264,19 @@ public class Steg {
         for (int i = 0; i < c.size(); i++)
             channels += colors[c.get(i)];
         writer.write("\n1" + channels + "1500\n");
-        writer.append(binaryToString(getLeastSigBitsFastTBLR(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.append(binaryToString(getLeastSigBitsFastTBLR(filename, c)).replaceAll("[^a-zA-Z0-9 \n]", ""));
         writer.append("\n2" + channels + "1500\n");
-        writer.write(binaryToString(getSecondLeastSigBitsFastTBLR(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.write(binaryToString(getSecondLeastSigBitsFastTBLR(filename, c)).replaceAll("[^a-zA-Z0-9 \n]", ""));
         writer.append("\n12" + channels + "1500\n");
-        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFastTBLR(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFastTBLR(filename, c)).replaceAll("[^a-zA-Z0-9 \n]", ""));
         writer.append("\n12altt" + channels + "1500\n");
-        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFastTBLRAlt(filename, c, true)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFastTBLRAlt(filename, c, true)).replaceAll("[^a-zA-Z0-9 \n]", ""));
         writer.append("\n12altf" + channels + "1500\n");
-        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFastTBLRAlt(filename, c, false)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFastTBLRAlt(filename, c, false)).replaceAll("[^a-zA-Z0-9 \n]", ""));
         writer.append("\n123" + channels + "1500\n");
-        writer.write(binaryToString(getFirstSecondAndThirdLeastSigBitsFastTBLR(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.write(binaryToString(getFirstSecondAndThirdLeastSigBitsFastTBLR(filename, c)).replaceAll("[^a-zA-Z0-9 \n]", ""));
         writer.append("\n3" + channels + "1500\n");
-        writer.write(binaryToString(getThirdLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.write(binaryToString(getThirdLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 \n]", ""));
     }
 
     public static void checkEverythingSingleFilewithAlpha(String dir, String filename) throws Exception {
