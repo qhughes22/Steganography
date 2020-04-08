@@ -1,4 +1,3 @@
-
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
@@ -13,14 +12,14 @@ public class Steg {
         a.add(2);
         a.add(0);
         a.add(1);
-        //printArray(findHeader(getLeastSigBits("Images/WideDogIsWide.png", a)));
+        //(findHeader(getLeastSigBits("Images/WideDogIsWide.png", a)));
 
-        getAllText("Images/found_images/newest");
+        getAllText("Images/newest");
         //getAllText("Images_pure");
         //File dir = new File("testtt");
         // System.out.println(dir.getPath());
         // magnifyEach("Images_pure");
-        magnifyEach("Images/found_images/newest");
+        magnifyEach("Images/newest");
     }
 
     public static void magnifyEach(String d) throws Exception {
@@ -237,18 +236,26 @@ public class Steg {
         writeMeTBLR(writer, c, f);
         writer.close();
     }
+
     public static void writeMe(BufferedWriter writer, ArrayList<Integer> c, String filename) throws Exception {
         String channels = "";
         char[] colors = new char[]{'r', 'g', 'b', 'a'};
         for (int i = 0; i < c.size(); i++)
             channels += colors[c.get(i)];
         writer.write("\n1" + channels + "1500\n");
-        writer.append(binaryToString(getLeastSigBitsFast(filename, c)));
+        writer.append(binaryToString(getLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
         writer.append("\n2" + channels + "1500\n");
-        writer.write(binaryToString(getSecondLeastSigBitsFast(filename, c)));
+        writer.write(binaryToString(getSecondLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
         writer.append("\n12" + channels + "1500\n");
-        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFast(filename, c)));
-
+        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.append("\n12altt" + channels + "1500\n");
+        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFastAlt(filename, c, true)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.append("\n12altf" + channels + "1500\n");
+        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFastAlt(filename, c, false)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.append("\n123" + channels + "1500\n");
+        writer.write(binaryToString(getFirstSecondAndThirdLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.append("\n3" + channels + "1500\n");
+        writer.write(binaryToString(getThirdLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
     }
 
     public static void writeMeTBLR(BufferedWriter writer, ArrayList<Integer> c, String filename) throws Exception {
@@ -257,12 +264,19 @@ public class Steg {
         for (int i = 0; i < c.size(); i++)
             channels += colors[c.get(i)];
         writer.write("\n1" + channels + "1500\n");
-        writer.append(binaryToString(getLeastSigBitsFastTBLR(filename, c)));
+        writer.append(binaryToString(getLeastSigBitsFastTBLR(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
         writer.append("\n2" + channels + "1500\n");
-        writer.write(binaryToString(getSecondLeastSigBitsFastTBLR(filename, c)));
+        writer.write(binaryToString(getSecondLeastSigBitsFastTBLR(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
         writer.append("\n12" + channels + "1500\n");
-        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFastTBLR(filename, c)));
-
+        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFastTBLR(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.append("\n12altt" + channels + "1500\n");
+        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFastTBLRAlt(filename, c, true)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.append("\n12altf" + channels + "1500\n");
+        writer.write(binaryToString(getFirstAndSecondLeastSigBitsFastTBLRAlt(filename, c, false)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.append("\n123" + channels + "1500\n");
+        writer.write(binaryToString(getFirstSecondAndThirdLeastSigBitsFastTBLR(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
+        writer.append("\n3" + channels + "1500\n");
+        writer.write(binaryToString(getThirdLeastSigBitsFast(filename, c)).replaceAll("[^a-zA-Z0-9 ]", ""));
     }
 
     public static void checkEverythingSingleFilewithAlpha(String dir, String filename) throws Exception {
@@ -593,24 +607,13 @@ public class Steg {
     }
 
     public static int[] getFirstAndSecondLeastSigBits(String filename, ArrayList<Integer> p) throws Exception { //gets least significant bits
-        boolean red = false;
-        boolean green = false;
-        boolean blue = false;
-        boolean alpha = false;
-        if (p.contains(0))
-            red = true;
-        if (p.contains(1))
-            green = true;
-        if (p.contains(2))
-            blue = true;
-        if (p.contains(3))
-            alpha = true;
         BufferedImage image = ImageIO.read(new File(filename));
         int width = image.getWidth();
         int height = image.getHeight();
         System.out.println("Height of " + filename + ": " + height + " Width: " + width);
         WritableRaster raster = image.getRaster();
         int count = 0;
+
         ArrayList<Integer> all = new ArrayList<>();
         for (int r = 0; r < height; r++) {
             for (int c = 0; c < width; c++) {
@@ -700,6 +703,174 @@ public class Steg {
                         all.add(pixels[p.get(i)] & 1);
                     }
                     count++;
+                }
+            }
+        }
+        int[] a = new int[all.size()];
+        for (int i = 0; i < all.size(); i++)
+            a[i] = all.get(i);
+        return a;
+    }
+
+    public static int[] getFirstSecondAndThirdLeastSigBitsFastTBLR(String filename, ArrayList<Integer> p) throws Exception { //gets least significant bits
+        BufferedImage image = ImageIO.read(new File(filename));
+        int width = image.getWidth();
+        int height = image.getHeight();
+        System.out.println("Height of " + filename + ": " + height + " Width: " + width);
+        WritableRaster raster = image.getRaster();
+        int count = 0;
+        ArrayList<Integer> all = new ArrayList<>();
+        for (int c = 0; c < width; c++) {
+            for (int r = 0; r < height; r++) {
+                int[] pixels = raster.getPixel(c, r, (int[]) null);
+                if (count < 1500) {
+                    for (int i = 0; i < p.size(); i++) {
+                        all.add((pixels[p.get(i)] & 4) >> 2);
+                        all.add((pixels[p.get(i)] & 2) >> 1);
+                        all.add(pixels[p.get(i)] & 1);
+                    }
+                    count++;
+                }
+            }
+        }
+        int[] a = new int[all.size()];
+        for (int i = 0; i < all.size(); i++)
+            a[i] = all.get(i);
+        return a;
+    }
+
+    public static int[] getFirstSecondAndThirdLeastSigBitsFast(String filename, ArrayList<Integer> p) throws Exception { //gets least significant bits
+        BufferedImage image = ImageIO.read(new File(filename));
+        int width = image.getWidth();
+        int height = image.getHeight();
+        System.out.println("Height of " + filename + ": " + height + " Width: " + width);
+        WritableRaster raster = image.getRaster();
+        int count = 0;
+        ArrayList<Integer> all = new ArrayList<>();
+        for (int r = 0; r < height; r++) {
+            for (int c = 0; c < width; c++) {
+                int[] pixels = raster.getPixel(c, r, (int[]) null);
+                if (count < 1500) {
+                    for (int i = 0; i < p.size(); i++) {
+                        all.add((pixels[p.get(i)] & 4) >> 2);
+                        all.add((pixels[p.get(i)] & 2) >> 1);
+                        all.add(pixels[p.get(i)] & 1);
+                    }
+                    count++;
+                }
+            }
+        }
+        int[] a = new int[all.size()];
+        for (int i = 0; i < all.size(); i++)
+            a[i] = all.get(i);
+        return a;
+    }
+
+    public static int[] getThirdLeastSigBitsFast(String filename, ArrayList<Integer> p) throws Exception { //gets least significant bits
+        BufferedImage image = ImageIO.read(new File(filename));
+        int width = image.getWidth();
+        int height = image.getHeight();
+        System.out.println("Height of " + filename + ": " + height + " Width: " + width);
+        WritableRaster raster = image.getRaster();
+        int count = 0;
+        ArrayList<Integer> all = new ArrayList<>();
+        for (int r = 0; r < height; r++) {
+            for (int c = 0; c < width; c++) {
+                int[] pixels = raster.getPixel(c, r, (int[]) null);
+                if (count < 1500) {
+                    for (int i = 0; i < p.size(); i++) {
+                        all.add((pixels[p.get(i)] & 4) >> 2);
+                    }
+                    count++;
+                }
+            }
+        }
+        int[] a = new int[all.size()];
+        for (int i = 0; i < all.size(); i++)
+            a[i] = all.get(i);
+        return a;
+    }
+
+    public static int[] getThirdLeastSigBitsFastTBLR(String filename, ArrayList<Integer> p) throws Exception { //gets least significant bits
+        BufferedImage image = ImageIO.read(new File(filename));
+        int width = image.getWidth();
+        int height = image.getHeight();
+        System.out.println("Height of " + filename + ": " + height + " Width: " + width);
+        WritableRaster raster = image.getRaster();
+        int count = 0;
+        ArrayList<Integer> all = new ArrayList<>();
+        for (int c = 0; c < width; c++) {
+            for (int r = 0; r < height; r++) {
+                int[] pixels = raster.getPixel(c, r, (int[]) null);
+                if (count < 1500) {
+                    for (int i = 0; i < p.size(); i++) {
+                        all.add((pixels[p.get(i)] & 4) >> 2);
+                    }
+                    count++;
+                }
+            }
+        }
+        int[] a = new int[all.size()];
+        for (int i = 0; i < all.size(); i++)
+            a[i] = all.get(i);
+        return a;
+    }
+
+    public static int[] getFirstAndSecondLeastSigBitsFastAlt(String filename, ArrayList<Integer> p, boolean first) throws Exception { //gets least significant bits
+        BufferedImage image = ImageIO.read(new File(filename));
+        int width = image.getWidth();
+        int height = image.getHeight();
+        System.out.println("Height of " + filename + ": " + height + " Width: " + width);
+        WritableRaster raster = image.getRaster();
+        int count = 0;
+        boolean t = !first;
+        ArrayList<Integer> all = new ArrayList<>();
+        for (int r = 0; r < height; r++) {
+            for (int c = 0; c < width; c++) {
+                int[] pixels = raster.getPixel(c, r, (int[]) null);
+                if (count < 1500) {
+                    for (int i = 0; i < p.size(); i++) {
+                        if (t) {
+                            all.add((pixels[p.get(i)] & 2) >> 1);
+                            t = false;
+                        } else {
+                            all.add(pixels[p.get(i)] & 1);
+                            t = true;
+                        }
+                    }
+                    count++;
+                }
+            }
+        }
+        int[] a = new int[all.size()];
+        for (int i = 0; i < all.size(); i++)
+            a[i] = all.get(i);
+        return a;
+    }
+
+    public static int[] getFirstAndSecondLeastSigBitsFastTBLRAlt(String filename, ArrayList<Integer> p, boolean first) throws Exception { //gets least significant bits
+        BufferedImage image = ImageIO.read(new File(filename));
+        int width = image.getWidth();
+        int height = image.getHeight();
+        System.out.println("Height of " + filename + ": " + height + " Width: " + width);
+        WritableRaster raster = image.getRaster();
+        int count = 0;
+        ArrayList<Integer> all = new ArrayList<>();
+        boolean t = !first;
+        for (int r = 0; r < height; r++) {
+            for (int c = 0; c < width; c++) {
+                int[] pixels = raster.getPixel(c, r, (int[]) null);
+                if (count < 1500) {
+                    for (int i = 0; i < p.size(); i++) {
+                        if (t) {
+                            all.add((pixels[p.get(i)] & 2) >> 1);
+                            t = false;
+                        } else {
+                            all.add(pixels[p.get(i)] & 1);
+                            t = true;
+                        }
+                        count++;
+                    }
                 }
             }
         }
@@ -956,4 +1127,3 @@ public class Steg {
         return q;
     }
 }
-
